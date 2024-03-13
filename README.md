@@ -13,3 +13,14 @@ Merkle tree Inclusion proof taken from [here](https://github.com/reilabs/gnark-l
 ```bash
 go run main.go
 ```
+
+## Output
+
+```
+15:00:24 INF compiling circuit
+15:00:24 INF parsed circuit inputs nbPublic=5 nbSecret=43
+15:00:24 INF building constraint builder nbConstraints=15971
+15:00:24 DBG constraint system solver done nbConstraints=15971 took=12.184334
+15:00:24 DBG prover done backend=groth16 curve=bn254 nbConstraints=15971 took=66.380416
+15:00:24 DBG verifier done backend=groth16 curve=bn254 took=1.793958
+```
