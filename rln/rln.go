@@ -5,8 +5,6 @@ import (
 	"github.com/consensys/gnark/std/rangecheck"
 )
 
-// Circuit defines a simple circuit
-// x**3 + x + 5 == y
 type RlnCircuit struct {
 	X                 frontend.Variable     `gnark:"x, public"`                 // message hash
 	ExternalNullifier frontend.Variable     `gnark:"externalNullifier, public"` // external nullifier
