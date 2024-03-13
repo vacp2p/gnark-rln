@@ -20,9 +20,7 @@ type RlnCircuit struct {
 
 func (circuit RlnCircuit) Define(api frontend.API) error {
 	identity_commitment := Poseidon(api, []frontend.Variable{circuit.IdentitySecret})
-	api.AssertIsEqual(identity_commitment, identity_commitment)
 	rate_commitment := Poseidon(api, []frontend.Variable{identity_commitment, circuit.UserMessageLimit})
-	api.AssertIsEqual(rate_commitment, rate_commitment)
 
 	levels := len(circuit.IdentityPathIndex)
 	hashes := make([]frontend.Variable, levels+1)
