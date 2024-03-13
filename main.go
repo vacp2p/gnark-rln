@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark-crypto/ecc/bn254/fr"
 	"github.com/consensys/gnark/backend/groth16"
@@ -121,7 +123,11 @@ func main() {
 
 	witness, _ := frontend.NewWitness(assignment, ecc.BN254.ScalarField())
 
+	startTime := time.Now().UnixMilli()
 	proof, err := groth16.Prove(cs, pk, witness)
+	endTime := time.Now().UnixMilli()
+	elapsed := endTime - startTime
+	print("Proving time: ", elapsed, "ms.\n")
 	if err != nil {
 		panic(err)
 	}
@@ -138,7 +144,11 @@ func main() {
 		panic(err)
 	}
 
+	startTime = time.Now().UnixMilli()
 	err = groth16.Verify(proof, vk, verifyWitness)
+	endTime = time.Now().UnixMilli()
+	elapsed = endTime - startTime
+	print("Verification time: ", elapsed, "ms.\n")
 
 	if err != nil {
 		print(err.Error())
