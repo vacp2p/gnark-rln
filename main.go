@@ -62,7 +62,7 @@ func main() {
 	// iterate over pathElements and replace with fr.Modulus().SetString("...") for eac, 10h element
 	for i := 0; i < len(pathElements); i++ {
 		x, ret := fr.Modulus().SetString(rawPathElements[i], 10)
-		if ret != true {
+		if !ret {
 			panic(ret)
 		}
 		pathElements[i] = frontend.Variable(x)
@@ -79,32 +79,32 @@ func main() {
 	}
 
 	x, ret := fr.Modulus().SetString("20645213238265527935869146898028115621427162613172918400241870500502509785943", 10)
-	if ret != true {
+	if !ret {
 		panic(ret)
 	}
 
 	external_nullifier, ret := fr.Modulus().SetString("21074405743803627666274838159589343934394162804826017440941339048886754734203", 10)
-	if ret != true {
+	if !ret {
 		panic(ret)
 	}
 
 	identity_secret, ret := fr.Modulus().SetString("2301650865650889795878889082892690584512243988708213561328369865554257051708", 10)
-	if ret != true {
+	if !ret {
 		panic(ret)
 	}
 
 	y, ret := fr.Modulus().SetString("16401008481486069296141645075505218976370369489687327284155463920202585288271", 10)
-	if ret != true {
+	if !ret {
 		panic(ret)
 	}
 
 	nullifier, ret := fr.Modulus().SetString("9102791780887227194595604713537772536258726662792598131262022534710887343694", 10)
-	if ret != true {
+	if !ret {
 		panic(ret)
 	}
 
 	root, ret := fr.Modulus().SetString("8502402278351299594663821509741133196466235670407051417832304486953898514733", 10)
-	if ret != true {
+	if !ret {
 		panic(ret)
 	}
 
@@ -132,14 +132,7 @@ func main() {
 		panic(err)
 	}
 
-	raw := &rln.RlnCircuit{
-		X:                 frontend.Variable(x),
-		ExternalNullifier: frontend.Variable(external_nullifier),
-		Y:                 frontend.Variable(y),
-		Root:              frontend.Variable(root),
-		Nullifier:         frontend.Variable(nullifier),
-	}
-	verifyWitness, err := frontend.NewWitness(raw, ecc.BN254.ScalarField(), frontend.PublicOnly())
+	verifyWitness, err := frontend.NewWitness(assignment, ecc.BN254.ScalarField(), frontend.PublicOnly())
 	if err != nil {
 		panic(err)
 	}
