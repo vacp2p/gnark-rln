@@ -7,6 +7,8 @@ import (
 	"github.com/consensys/gnark/test"
 )
 
+// TODO: get kats for other curves
+
 func TestRlnCircuit(t *testing.T) {
 	assert := test.NewAssert(t)
 

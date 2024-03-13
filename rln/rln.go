@@ -21,15 +21,9 @@ type RlnCircuit struct {
 }
 
 func (circuit RlnCircuit) Define(api frontend.API) error {
-	var identity_commitment_input [1]frontend.Variable
-	identity_commitment_input[0] = circuit.IdentitySecret
-
-	identity_commitment := Poseidon(api, identity_commitment_input[:])
+	identity_commitment := Poseidon(api, []frontend.Variable{circuit.IdentitySecret})
 	api.AssertIsEqual(identity_commitment, identity_commitment)
-	var rate_commitment_input [2]frontend.Variable
-	rate_commitment_input[0] = identity_commitment
-	rate_commitment_input[1] = circuit.UserMessageLimit
-	rate_commitment := Poseidon(api, rate_commitment_input[:])
+	rate_commitment := Poseidon(api, []frontend.Variable{identity_commitment, circuit.UserMessageLimit})
 	api.AssertIsEqual(rate_commitment, rate_commitment)
 
 	levels := len(circuit.IdentityPathIndex)
@@ -38,15 +32,8 @@ func (circuit RlnCircuit) Define(api frontend.API) error {
 	hashes[0] = rate_commitment
 	for i := 0; i < levels; i++ {
 		api.AssertIsBoolean(circuit.IdentityPathIndex[i])
-		var left_hash_input [2]frontend.Variable
-		left_hash_input[0] = hashes[i]
-		left_hash_input[1] = circuit.PathElements[i]
-		var right_hash_input [2]frontend.Variable
-		right_hash_input[0] = circuit.PathElements[i]
-		right_hash_input[1] = hashes[i]
-
-		left_hash := Poseidon(api, left_hash_input[:])
-		right_hash := Poseidon(api, right_hash_input[:])
+		left_hash := Poseidon(api, []frontend.Variable{hashes[i], circuit.PathElements[i]})
+		right_hash := Poseidon(api, []frontend.Variable{circuit.PathElements[i], hashes[i]})
 		hashes[i+1] = api.Select(circuit.IdentityPathIndex[i], right_hash, left_hash)
 	}
 	root := hashes[levels]
@@ -56,17 +43,11 @@ func (circuit RlnCircuit) Define(api frontend.API) error {
 	rangeChecker.Check(circuit.MessageId, 16)
 	api.AssertIsLessOrEqual(circuit.MessageId, circuit.UserMessageLimit)
 
-	var a1_input [3]frontend.Variable
-	a1_input[0] = circuit.IdentitySecret
-	a1_input[1] = circuit.ExternalNullifier
-	a1_input[2] = circuit.MessageId
-	a1 := Poseidon(api, a1_input[:])
+	a1 := Poseidon(api, []frontend.Variable{circuit.IdentitySecret, circuit.ExternalNullifier, circuit.MessageId})
 	y := api.Add(circuit.IdentitySecret, api.Mul(a1, circuit.X))
 	api.AssertIsEqual(y, circuit.Y)
 
-	var nullifier_input [1]frontend.Variable
-	nullifier_input[0] = a1
-	nullifier := Poseidon(api, nullifier_input[:])
+	nullifier := Poseidon(api, []frontend.Variable{a1})
 	api.AssertIsEqual(nullifier, circuit.Nullifier)
 
 	return nil
