@@ -1,4 +1,4 @@
-# g-rln
+# gnark-rln
 
 gnark implementation of rln-v2. super hacky and unclean.
 

@@ -6,7 +6,7 @@ import (
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/frontend"
 	"github.com/consensys/gnark/frontend/cs/r1cs"
-	rln "github.com/rymnc/g-rln/rln"
+	rln "github.com/rymnc/gnark-rln/rln"
 )
 
 func main() {

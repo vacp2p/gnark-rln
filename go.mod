@@ -1,4 +1,4 @@
-module github.com/rymnc/g-rln
+module github.com/rymnc/gnark-rln
 
 go 1.22.1
 
