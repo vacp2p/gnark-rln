@@ -91,6 +91,21 @@ func main() {
 		panic(ret)
 	}
 
+	y, ret := fr.Modulus().SetString("16401008481486069296141645075505218976370369489687327284155463920202585288271", 10)
+	if ret != true {
+		panic(ret)
+	}
+
+	nullifier, ret := fr.Modulus().SetString("9102791780887227194595604713537772536258726662792598131262022534710887343694", 10)
+	if ret != true {
+		panic(ret)
+	}
+
+	root, ret := fr.Modulus().SetString("8502402278351299594663821509741133196466235670407051417832304486953898514733", 10)
+	if ret != true {
+		panic(ret)
+	}
+
 	assignment := &rln.RlnCircuit{
 		X:                 frontend.Variable(x),
 		ExternalNullifier: frontend.Variable(external_nullifier),
@@ -99,9 +114,9 @@ func main() {
 		UserMessageLimit:  frontend.Variable(100),
 		PathElements:      pathElements,
 		IdentityPathIndex: identityPathIndex,
-		Y:                 frontend.Variable(0),
-		Root:              frontend.Variable(0),
-		Nullifier:         frontend.Variable(0),
+		Y:                 frontend.Variable(y),
+		Root:              frontend.Variable(root),
+		Nullifier:         frontend.Variable(nullifier),
 	}
 
 	witness, _ := frontend.NewWitness(assignment, ecc.BN254.ScalarField())
@@ -114,9 +129,9 @@ func main() {
 	raw := &rln.RlnCircuit{
 		X:                 frontend.Variable(x),
 		ExternalNullifier: frontend.Variable(external_nullifier),
-		Y:                 frontend.Variable(0),
-		Root:              frontend.Variable(0),
-		Nullifier:         frontend.Variable(0),
+		Y:                 frontend.Variable(y),
+		Root:              frontend.Variable(root),
+		Nullifier:         frontend.Variable(nullifier),
 	}
 	verifyWitness, err := frontend.NewWitness(raw, ecc.BN254.ScalarField(), frontend.PublicOnly())
 	if err != nil {

@@ -49,8 +49,8 @@ func (circuit RlnCircuit) Define(api frontend.API) error {
 		right_hash := Poseidon(api, right_hash_input[:])
 		hashes[i+1] = api.Select(circuit.IdentityPathIndex[i], right_hash, left_hash)
 	}
-	circuit.Root = hashes[levels]
-	api.AssertIsEqual(circuit.Root, circuit.Root)
+	root := hashes[levels]
+	api.AssertIsEqual(root, circuit.Root)
 
 	rangeChecker := rangecheck.New(api)
 	rangeChecker.Check(circuit.MessageId, 16)
@@ -61,13 +61,13 @@ func (circuit RlnCircuit) Define(api frontend.API) error {
 	a1_input[1] = circuit.ExternalNullifier
 	a1_input[2] = circuit.MessageId
 	a1 := Poseidon(api, a1_input[:])
-	circuit.Y = api.Mul(api.Add(circuit.IdentitySecret, a1), circuit.X)
-	api.AssertIsEqual(circuit.Y, circuit.Y)
+	y := api.Add(circuit.IdentitySecret, api.Mul(a1, circuit.X))
+	api.AssertIsEqual(y, circuit.Y)
 
 	var nullifier_input [1]frontend.Variable
 	nullifier_input[0] = a1
-	circuit.Nullifier = Poseidon(api, nullifier_input[:])
-	api.AssertIsEqual(circuit.Nullifier, circuit.Nullifier)
+	nullifier := Poseidon(api, nullifier_input[:])
+	api.AssertIsEqual(nullifier, circuit.Nullifier)
 
 	return nil
 }
