@@ -11,7 +11,13 @@ Merkle tree Inclusion proof taken from [here](https://github.com/reilabs/gnark-l
 ## Usage
 
 ```bash
-go run main.go
+make run
+```
+
+## Test
+
+```bash
+make test
 ```
 
 ## Output
