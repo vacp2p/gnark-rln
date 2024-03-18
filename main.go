@@ -1,8 +1,6 @@
 package main
 
 import (
-	"time"
-
 	"github.com/consensys/gnark-crypto/ecc"
 	"github.com/consensys/gnark/backend/groth16"
 	"github.com/consensys/gnark/frontend"
@@ -48,6 +46,10 @@ func main() {
 		X:                 frontend.Variable(rln.GetBn254X()),
 		ExternalNullifier: frontend.Variable(rln.GetBn254ExternalNullifier()),
 		IdentitySecret:    frontend.Variable(rln.GetBn254IdentitySecret()),
+		Epoch:             frontend.Variable(240),
+		EpochQuotient:     frontend.Variable(2),
+		RlnIdentifer:      frontend.Variable(1),
+		UserEpochLimit:    frontend.Variable(120),
 		MessageId:         frontend.Variable(1),
 		UserMessageLimit:  frontend.Variable(100),
 		PathElements:      rln.GetBn254PathElements(),
@@ -59,11 +61,7 @@ func main() {
 
 	witness, _ := frontend.NewWitness(assignment, ecc.BN254.ScalarField())
 
-	startTime := time.Now().UnixMilli()
 	proof, err := groth16.Prove(cs, pk, witness)
-	endTime := time.Now().UnixMilli()
-	elapsed := endTime - startTime
-	print("Proving time: ", elapsed, "ms.\n")
 	if err != nil {
 		panic(err)
 	}
@@ -73,11 +71,7 @@ func main() {
 		panic(err)
 	}
 
-	startTime = time.Now().UnixMilli()
 	err = groth16.Verify(proof, vk, verifyWitness)
-	endTime = time.Now().UnixMilli()
-	elapsed = endTime - startTime
-	print("Verification time: ", elapsed, "ms.\n")
 
 	if err != nil {
 		print(err.Error())
